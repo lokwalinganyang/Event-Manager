@@ -132,3 +132,31 @@ if 'RAILWAY_STATIC_URL' in os.environ:
     ALLOWED_HOSTS = ['*']
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+# Render.com Production Settings
+import os
+if 'RENDER' in os.environ:
+    DEBUG = False
+    ALLOWED_HOSTS = ['.onrender.com', 'localhost', '127.0.0.1']
+    
+    # PostgreSQL database
+    import dj_database_url
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=os.environ.get('DATABASE_URL'),
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
+    }
+    
+    # Static files
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    
+    # Add WhiteNoise middleware
+    MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+    
+    # Security
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    
