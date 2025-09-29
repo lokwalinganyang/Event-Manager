@@ -16,6 +16,17 @@ class HomePageView(ListView):
     
     def get_queryset(self):
         return Event.objects.filter(date__gte=timezone.now()).order_by('date')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        events = context['events']
+        
+        # Categorize events
+        context['open_events'] = [event for event in events if not event.is_full]
+        context['sold_out_events'] = [event for event in events if event.is_full]
+        context['featured_events'] = events[:3]  # First 3 events as featured
+        
+        return context
 
 class EventDetailView(DetailView):
     model = Event
@@ -28,11 +39,7 @@ class RegistrationCreateView(CreateView):
     fields = ['first_name', 'last_name', 'email', 'phone']
     
     def get_success_url(self):
-        # Option 1: Redirect to home page
         return reverse('events:home')
-        
-        # Option 2: Redirect to event detail page (uncomment if preferred)
-        # return reverse('events:event_detail', kwargs={'pk': self.kwargs['event_id']})
     
     def form_valid(self, form):
         event = get_object_or_404(Event, pk=self.kwargs['event_id'])

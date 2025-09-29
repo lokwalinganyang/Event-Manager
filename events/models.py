@@ -20,6 +20,18 @@ class Event(models.Model):
     @property
     def is_full(self):
         return self.registered_count >= self.max_participants
+    
+    @property
+    def progress_percentage(self):
+        """Return registration progress as percentage"""
+        if self.max_participants == 0:
+            return 0
+        return (self.registered_count / self.max_participants) * 100
+    
+    @property
+    def spots_remaining(self):
+        """Return number of spots remaining"""
+        return max(0, self.max_participants - self.registered_count)
 
 class Registration(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='registrations')

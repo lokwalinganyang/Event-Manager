@@ -1,59 +1,18 @@
-{% extends 'base.html' %}
-
-{% block title %}{{ event.title }} - Event Management{% endblock %}
-
-{% block content %}
-<div class="row">
-    <div class="col-12">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{% url 'events:home' %}">Home</a></li>
-                <li class="breadcrumb-item active">{{ event.title }}</li>
-            </ol>
-        </nav>
-        
-        <div class="card shadow">
-            <div class="card-body">
-                <h1 class="card-title">{{ event.title }}</h1>
-                <p class="lead">{{ event.description }}</p>
-                
-                <div class="row mt-4">
-                    <div class="col-md-6">
-                        <h4>📋 Event Details</h4>
-                        <div class="list-group">
-                            <div class="list-group-item">
-                                <strong>📅 Date & Time:</strong> {{ event.date|date:"F d, Y H:i" }}
-                            </div>
-                            <div class="list-group-item">
-                                <strong>📍 Location:</strong> {{ event.location }}
-                            </div>
-                            <div class="list-group-item">
-                                <strong>👥 Available Spots:</strong> {{ event.registered_count }}/{{ event.max_participants }}
-                            </div>
-                            <div class="list-group-item">
-                                <strong>📊 Status:</strong> 
-                                {% if event.is_full %}
-                                    <span class="badge bg-danger">Fully Booked</span>
-                                {% else %}
-                                    <span class="badge bg-success">Spots Available</span>
-                                {% endif %}
-                            </div>
-                        </div>
-                        
-                        <div class="mt-4">
-                            {% if not event.is_full %}
-                                <a href="{% url 'events:register' event.pk %}" class="btn btn-success btn-lg">
-                                    🎫 Register Now
-                                </a>
-                            {% else %}
-                                <button class="btn btn-secondary btn-lg" disabled>Event Full</button>
-                            {% endif %}
-                            <a href="{% url 'events:home' %}" class="btn btn-outline-primary">← Back to Events</a>
-                        </div>
-                    </div>
-                </div>
+<!-- Add this after the location section in event_detail.html -->
+<div class="col-md-6">
+    <div class="d-flex align-items-center p-3 border rounded-3">
+        <div class="feature-icon me-3">
+            <i class="fas fa-ticket-alt"></i>
+        </div>
+        <div>
+            <small class="text-muted">REGISTRATION STATUS</small>
+            <div class="fw-semibold">
+                {% if event.is_full %}
+                    <span class="badge bg-danger">Sold Out</span>
+                {% else %}
+                    <span class="badge bg-success">Open for Registration</span>
+                {% endif %}
             </div>
         </div>
     </div>
 </div>
-{% endblock %}
