@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">🎊 Upcoming Events</h1>
+        <p class="lead">Discover amazing events and register to secure your spot!</p>
+    </div>
+</div>
+
+<div class="row">
+    {% for event in events %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">{{ event.title }}</h5>
+                <p class="card-text text-muted">{{ event.description|truncatewords:20 }}</p>
+                <div class="mb-2">
+                    <small class="text-muted">
+                        📅 {{ event.date|date:"M d, Y H:i" }}<br>
+                        📍 {{ event.location }}<br>
+                        👥 {{ event.registered_count }}/{{ event.max_participants }} registered
+                    </small>
+                </div>
+                {% if event.is_full %}
+                    <span class="badge bg-danger">Fully Booked</span>
+                {% else %}
+                    <span class="badge bg-success">Spots Available</span>
+                {% endif %}
+            </div>
+            <div class="card-footer bg-transparent">
+                <a href="{% url 'events:event_detail' event.pk %}" class="btn btn-outline-primary btn-sm">View Details</a>
+                {% if not event.is_full %}
+                    <a href="{% url 'events:register' event.pk %}" class="btn btn-success btn-sm">Register Now</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info text-center">
+            <h4>No upcoming events found</h4>
+            <p>Check back later for new events!</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
