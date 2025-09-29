@@ -5,132 +5,97 @@
 {% block content %}
 <div class="container mt-4">
     <div class="row justify-content-center">
-        <div class="col-lg-8">
+        <div class="col-lg-6">
+            <!-- Back Button -->
+            <div class="mb-4">
+                <a href="{% url 'events:event_detail' event.pk %}" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Event
+                </a>
+            </div>
+
+            <!-- Registration Card -->
             <div class="card">
-                <div class="card-header text-center">
-                    <h3 class="mb-0 text-white">
-                        <i class="fas fa-ticket-alt me-2"></i>Register for Event
-                    </h3>
+                <div class="card-header bg-primary text-white text-center">
+                    <h3 class="mb-0">Register for Event</h3>
+                    <p class="mb-0 mt-2">{{ event.title }}</p>
                 </div>
                 <div class="card-body">
-                    <!-- Event Info Card -->
-                    <div class="card border-0 bg-light mb-4">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ event.title }}</h5>
-                            <div class="row g-3">
-                                <div class="col-sm-6">
-                                    <small class="text-muted">📅 Date & Time</small>
-                                    <div class="fw-semibold">{{ event.date|date:"F d, Y H:i" }}</div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <small class="text-muted">📍 Location</small>
-                                    <div class="fw-semibold">{{ event.location }}</div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <small class="text-muted">👥 Availability</small>
-                                    <div class="fw-semibold">{{ event.registered_count }}/{{ event.max_participants }}</div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <small class="text-muted">📊 Status</small>
-                                    <div class="fw-semibold">
-                                        {% if event.is_full %}
-                                            <span class="badge bg-danger">Fully Booked</span>
-                                        {% else %}
-                                            <span class="badge bg-success">Spots Available</span>
-                                        {% endif %}
-                                    </div>
-                                </div>
+                    <!-- Event Quick Info -->
+                    <div class="alert alert-info">
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <small class="text-muted">DATE</small>
+                                <div class="fw-semibold">{{ event.date|date:"M d, Y" }}</div>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">LOCATION</small>
+                                <div class="fw-semibold">{{ event.location }}</div>
                             </div>
                         </div>
                     </div>
 
                     {% if not event.is_full %}
-                    <form method="post" class="needs-validation" novalidate>
+                    <!-- Registration Form -->
+                    <form method="post">
                         {% csrf_token %}
                         
                         {% if form.non_field_errors %}
                             <div class="alert alert-danger">
-                                <i class="fas fa-exclamation-triangle me-2"></i>
                                 {{ form.non_field_errors }}
                             </div>
                         {% endif %}
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="{{ form.first_name.id_for_label }}" class="form-label">
-                                    <i class="fas fa-user me-1"></i>First Name *
-                                </label>
-                                <input type="text" 
-                                       name="{{ form.first_name.name }}" 
+                                <label class="form-label">First Name *</label>
+                                <input type="text" name="{{ form.first_name.name }}" 
                                        class="form-control {% if form.first_name.errors %}is-invalid{% endif %}" 
-                                       value="{{ form.first_name.value|default:'' }}"
-                                       required>
+                                       value="{{ form.first_name.value|default:'' }}" required>
                                 {% if form.first_name.errors %}
-                                    <div class="invalid-feedback">
-                                        {{ form.first_name.errors.0 }}
-                                    </div>
+                                    <div class="invalid-feedback">{{ form.first_name.errors.0 }}</div>
                                 {% endif %}
                             </div>
                             
                             <div class="col-md-6 mb-3">
-                                <label for="{{ form.last_name.id_for_label }}" class="form-label">
-                                    <i class="fas fa-user me-1"></i>Last Name *
-                                </label>
-                                <input type="text" 
-                                       name="{{ form.last_name.name }}" 
+                                <label class="form-label">Last Name *</label>
+                                <input type="text" name="{{ form.last_name.name }}" 
                                        class="form-control {% if form.last_name.errors %}is-invalid{% endif %}" 
-                                       value="{{ form.last_name.value|default:'' }}"
-                                       required>
+                                       value="{{ form.last_name.value|default:'' }}" required>
                                 {% if form.last_name.errors %}
-                                    <div class="invalid-feedback">
-                                        {{ form.last_name.errors.0 }}
-                                    </div>
+                                    <div class="invalid-feedback">{{ form.last_name.errors.0 }}</div>
                                 {% endif %}
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label for="{{ form.email.id_for_label }}" class="form-label">
-                                <i class="fas fa-envelope me-1"></i>Email Address *
-                            </label>
-                            <input type="email" 
-                                   name="{{ form.email.name }}" 
+                            <label class="form-label">Email Address *</label>
+                            <input type="email" name="{{ form.email.name }}" 
                                    class="form-control {% if form.email.errors %}is-invalid{% endif %}" 
-                                   value="{{ form.email.value|default:'' }}"
-                                   required>
+                                   value="{{ form.email.value|default:'' }}" required>
                             {% if form.email.errors %}
-                                <div class="invalid-feedback">
-                                    {{ form.email.errors.0 }}
-                                </div>
+                                <div class="invalid-feedback">{{ form.email.errors.0 }}</div>
                             {% endif %}
                         </div>
 
                         <div class="mb-4">
-                            <label for="{{ form.phone.id_for_label }}" class="form-label">
-                                <i class="fas fa-phone me-1"></i>Phone Number (Optional)
-                            </label>
-                            <input type="tel" 
-                                   name="{{ form.phone.name }}" 
+                            <label class="form-label">Phone Number (Optional)</label>
+                            <input type="tel" name="{{ form.phone.name }}" 
                                    class="form-control {% if form.phone.errors %}is-invalid{% endif %}" 
                                    value="{{ form.phone.value|default:'' }}"
                                    placeholder="+1 (555) 123-4567">
                             {% if form.phone.errors %}
-                                <div class="invalid-feedback">
-                                    {{ form.phone.errors.0 }}
-                                </div>
+                                <div class="invalid-feedback">{{ form.phone.errors.0 }}</div>
                             {% endif %}
                         </div>
 
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <a href="{% url 'events:event_detail' event.pk %}" class="btn btn-outline-secondary me-md-2">
-                                <i class="fas fa-arrow-left me-1"></i>Cancel
-                            </a>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-check-circle me-1"></i>Complete Registration
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-check-circle me-2"></i>Complete Registration
                             </button>
                         </div>
                     </form>
                     {% else %}
+                    <!-- Event Full Message -->
                     <div class="text-center py-4">
                         <i class="fas fa-times-circle fa-3x text-danger mb-3"></i>
                         <h4 class="text-danger">Registration Closed</h4>
@@ -145,23 +110,4 @@
         </div>
     </div>
 </div>
-
-<script>
-// Form validation
-(function() {
-    'use strict';
-    window.addEventListener('load', function() {
-        var forms = document.getElementsByClassName('needs-validation');
-        var validation = Array.prototype.filter.call(forms, function(form) {
-            form.addEventListener('submit', function(event) {
-                if (form.checkValidity() === false) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-                form.classList.add('was-validated');
-            }, false);
-        });
-    }, false);
-})();
-</script>
 {% endblock %}

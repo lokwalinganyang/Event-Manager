@@ -4,233 +4,103 @@
 <!-- Hero Section -->
 <section class="hero-section">
     <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                <h1 class="display-4 fw-bold mb-3">Discover Extraordinary Events</h1>
-                <p class="lead mb-4">Join thousands of professionals at our curated events. From tech conferences to creative workshops, find your next opportunity to learn and connect.</p>
-                <div class="d-flex gap-3 flex-wrap">
-                    <span class="badge bg-light text-dark">
-                        <i class="fas fa-users me-1"></i>{{ events|length }} Events
-                    </span>
-                    <span class="badge bg-light text-dark">
-                        <i class="fas fa-check-circle me-1"></i>{{ open_events|length }} Open
-                    </span>
-                    <span class="badge bg-light text-dark">
-                        <i class="fas fa-times-circle me-1"></i>{{ sold_out_events|length }} Sold Out
-                    </span>
+        <div class="row align-items-center text-center">
+            <div class="col-lg-8 mx-auto">
+                <h1 class="display-4 fw-bold mb-3">Find Your Perfect Event</h1>
+                <p class="lead mb-4">Discover amazing events and register in just a few clicks. No complicated forms, no confusion.</p>
+                <div class="d-flex gap-3 justify-content-center flex-wrap">
+                    <a href="#available-events" class="btn btn-light btn-lg">
+                        <i class="fas fa-calendar-check me-2"></i>Browse Events
+                    </a>
+                    <a href="{% url 'events:about' %}" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-info-circle me-2"></i>Learn More
+                    </a>
                 </div>
-            </div>
-            <div class="col-lg-4 text-center">
-                <div class="feature-icon mx-auto">
-                    <i class="fas fa-calendar-check fa-lg"></i>
-                </div>
-                <h5 class="text-white mt-2">Easy Registration</h5>
-                <p class="text-light">Secure your spot in just a few clicks</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Events Navigation -->
-<div class="container">
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body py-3">
-                    <div class="row align-items-center">
-                        <div class="col-md-6">
-                            <h4 class="gradient-text mb-0">Available Events</h4>
-                            <p class="text-muted mb-0">Browse by category</p>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="d-flex gap-2 justify-content-md-end flex-wrap">
-                                <a href="#open-events" class="btn btn-outline-primary btn-sm">
-                                    <i class="fas fa-door-open me-1"></i>Open Positions ({{ open_events|length }})
-                                </a>
-                                <a href="#sold-out" class="btn btn-outline-secondary btn-sm">
-                                    <i class="fas fa-times-circle me-1"></i>Sold Out ({{ sold_out_events|length }})
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<!-- Quick Stats -->
+<section class="py-4 bg-white">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-4">
+                <h3 class="text-primary mb-1">{{ events|length }}</h3>
+                <p class="text-muted mb-0">Total Events</p>
+            </div>
+            <div class="col-md-4">
+                <h3 class="text-success mb-1">{{ open_events|length }}</h3>
+                <p class="text-muted mb-0">Available Now</p>
+            </div>
+            <div class="col-md-4">
+                <h3 class="text-danger mb-1">{{ sold_out_events|length }}</h3>
+                <p class="text-muted mb-0">Sold Out</p>
             </div>
         </div>
     </div>
-</div>
+</section>
 
-<!-- Open Events Section -->
-{% if open_events %}
-<section id="open-events" class="mb-5">
+<!-- Available Events -->
+<section id="available-events" class="py-5">
     <div class="container">
         <div class="row mb-4">
-            <div class="col-12">
-                <div class="d-flex align-items-center justify-content-between">
-                    <h3 class="gradient-text">
-                        <i class="fas fa-door-open me-2"></i>Open Positions
-                    </h3>
-                    <span class="badge bg-success fs-6">
-                        {{ open_events|length }} Available
-                    </span>
-                </div>
-                <p class="text-muted">Don't miss out! Register for these exciting events before they're full.</p>
+            <div class="col-12 text-center">
+                <h2 class="gradient-text fw-bold">Available Events</h2>
+                <p class="text-muted">Click on any event to see details and register</p>
             </div>
         </div>
 
+        {% if open_events %}
         <div class="row g-4">
             {% for event in open_events %}
-            <div class="col-xl-4 col-lg-6 col-md-6">
-                <div class="card event-card h-100 border-success">
-                    <div class="card-header bg-success">
-                        <h5 class="card-title mb-0 text-white">{{ event.title }}</h5>
-                    </div>
+            <div class="col-lg-6">
+                <div class="card event-card h-100">
                     <div class="card-body">
-                        <p class="card-text text-muted mb-3">{{ event.description|truncatewords:25 }}</p>
-                        
-                        <div class="stats">
-                            <div class="stat-item">
-                                <i class="fas fa-calendar text-success"></i>
-                                <span>{{ event.date|date:"M d, Y" }}</span>
-                            </div>
-                            <div class="stat-item">
-                                <i class="fas fa-clock text-success"></i>
-                                <span>{{ event.date|date:"H:i" }}</span>
-                            </div>
-                        </div>
-                        
-                        <div class="stats">
-                            <div class="stat-item">
-                                <i class="fas fa-map-marker-alt text-success"></i>
-                                <span>{{ event.location }}</span>
-                            </div>
-                            <div class="stat-item">
-                                <i class="fas fa-users text-success"></i>
-                                <span>{{ event.registered_count }}/{{ event.max_participants }}</span>
-                            </div>
-                        </div>
-
-                        <!-- Progress Bar -->
-                        <div class="mt-3">
-                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                <small class="text-muted">Spots filling fast!</small>
-                                <small class="text-success fw-semibold">
-                                    {{ event.registered_count }}/{{ event.max_participants }}
-                                </small>
-                            </div>
-                            <div class="progress" style="height: 6px;">
-                                <div class="progress-bar bg-success progress-bar-{{ event.id }}" 
-                                     role="progressbar" 
-                                     aria-valuenow="{{ event.registered_count }}" 
-                                     aria-valuemin="0" 
-                                     aria-valuemax="{{ event.max_participants }}">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <h5 class="card-title">{{ event.title }}</h5>
                             <span class="badge bg-success">
                                 <i class="fas fa-check-circle me-1"></i>Available
                             </span>
-                            
-                            <div class="btn-group">
-                                <a href="{% url 'events:event_detail' event.pk %}" class="btn btn-outline-success btn-sm">
-                                    <i class="fas fa-eye me-1"></i>Details
-                                </a>
-                                <a href="{% url 'events:register' event.pk %}" class="btn btn-success btn-sm">
-                                    <i class="fas fa-ticket-alt me-1"></i>Register
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-</section>
-{% endif %}
-
-<!-- Sold Out Events Section -->
-{% if sold_out_events %}
-<section id="sold-out" class="mb-5">
-    <div class="container">
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="d-flex align-items-center justify-content-between">
-                    <h3 class="gradient-text">
-                        <i class="fas fa-times-circle me-2"></i>Sold Out Events
-                    </h3>
-                    <span class="badge bg-danger fs-6">
-                        {{ sold_out_events|length }} Full
-                    </span>
-                </div>
-                <p class="text-muted">These popular events have reached maximum capacity. Check back for future dates!</p>
-            </div>
-        </div>
-
-        <div class="row g-4">
-            {% for event in sold_out_events %}
-            <div class="col-xl-4 col-lg-6 col-md-6">
-                <div class="card event-card h-100 border-danger opacity-75">
-                    <div class="card-header bg-danger">
-                        <h5 class="card-title mb-0 text-white">{{ event.title }}</h5>
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text text-muted mb-3">{{ event.description|truncatewords:25 }}</p>
-                        
-                        <div class="stats">
-                            <div class="stat-item">
-                                <i class="fas fa-calendar text-danger"></i>
-                                <span>{{ event.date|date:"M d, Y" }}</span>
-                            </div>
-                            <div class="stat-item">
-                                <i class="fas fa-clock text-danger"></i>
-                                <span>{{ event.date|date:"H:i" }}</span>
-                            </div>
                         </div>
                         
-                        <div class="stats">
-                            <div class="stat-item">
-                                <i class="fas fa-map-marker-alt text-danger"></i>
-                                <span>{{ event.location }}</span>
-                            </div>
-                            <div class="stat-item">
-                                <i class="fas fa-users text-danger"></i>
-                                <span>{{ event.registered_count }}/{{ event.max_participants }}</span>
+                        <p class="card-text text-muted">{{ event.description|truncatewords:30 }}</p>
+                        
+                        <div class="event-details mb-3">
+                            <div class="d-flex flex-wrap gap-3">
+                                <span class="text-muted">
+                                    <i class="fas fa-calendar text-primary me-1"></i>
+                                    {{ event.date|date:"M d, Y" }}
+                                </span>
+                                <span class="text-muted">
+                                    <i class="fas fa-clock text-primary me-1"></i>
+                                    {{ event.date|date:"H:i" }}
+                                </span>
+                                <span class="text-muted">
+                                    <i class="fas fa-map-marker-alt text-primary me-1"></i>
+                                    {{ event.location }}
+                                </span>
                             </div>
                         </div>
 
-                        <!-- Full Progress Bar -->
-                        <div class="mt-3">
-                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                <small class="text-muted">Completely booked!</small>
-                                <small class="text-danger fw-semibold">
-                                    {{ event.registered_count }}/{{ event.max_participants }}
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="spots-info">
+                                <small class="text-muted">
+                                    <i class="fas fa-users me-1"></i>
+                                    {{ event.registered_count }}/{{ event.max_participants }} registered
                                 </small>
-                            </div>
-                            <div class="progress" style="height: 6px;">
-                                <div class="progress-bar bg-danger" 
-                                     role="progressbar" 
-                                     style="width: 100%"
-                                     aria-valuenow="{{ event.registered_count }}" 
-                                     aria-valuemin="0" 
-                                     aria-valuemax="{{ event.max_participants }}">
+                                <div class="progress mt-1" style="height: 4px; width: 120px;">
+                                    <div class="progress-bar bg-success progress-bar-{{ event.id }}" 
+                                         data-registered="{{ event.registered_count }}" 
+                                         data-max="{{ event.max_participants }}">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="d-flex justify-content-between align-items-center mt-3">
-                            <span class="badge bg-danger">
-                                <i class="fas fa-times-circle me-1"></i>Sold Out
-                            </span>
                             
-                            <div class="btn-group">
-                                <a href="{% url 'events:event_detail' event.pk %}" class="btn btn-outline-danger btn-sm">
-                                    <i class="fas fa-eye me-1"></i>Details
+                            <div class="event-actions">
+                                <a href="{% url 'events:event_detail' event.pk %}" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-eye me-1"></i>View Details
                                 </a>
-                                <button class="btn btn-danger btn-sm" disabled>
-                                    <i class="fas fa-times me-1"></i>Full
-                                </button>
                             </div>
                         </div>
                     </div>
@@ -238,87 +108,131 @@
             </div>
             {% endfor %}
         </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+            <h4 class="text-muted">No Events Available Right Now</h4>
+            <p class="text-muted">Check back later for new events!</p>
+        </div>
+        {% endif %}
     </div>
 </section>
-{% endif %}
 
-<!-- No Events Message -->
-{% if not open_events and not sold_out_events %}
-<div class="container">
-    <div class="row">
-        <div class="col-12">
-            <div class="card text-center py-5">
-                <div class="card-body">
-                    <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
-                    <h4 class="text-muted">No Events Available</h4>
-                    <p class="text-muted">Check back later for new events!</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-{% endif %}
-
-<!-- Features Section -->
-<section class="py-5 mt-5" style="background: var(--secondary);">
+<!-- How It Works -->
+<section class="py-5 bg-light">
     <div class="container">
         <div class="row text-center mb-5">
             <div class="col-12">
-                <h3 class="gradient-text fw-bold">Why Choose EventFlow?</h3>
+                <h2 class="gradient-text fw-bold">How It Works</h2>
+                <p class="text-muted">Simple steps to register for any event</p>
             </div>
         </div>
         <div class="row g-4">
             <div class="col-md-4 text-center">
-                <div class="feature-icon mx-auto">
-                    <i class="fas fa-shield-alt"></i>
-                </div>
-                <h5 class="mt-2">Secure & Reliable</h5>
-                <p class="text-muted">Enterprise-grade security for all your event data</p>
+                <div class="step-number">1</div>
+                <h5>Browse Events</h5>
+                <p class="text-muted">Look through available events and find one that interests you</p>
             </div>
             <div class="col-md-4 text-center">
-                <div class="feature-icon mx-auto">
-                    <i class="fas fa-mobile-alt"></i>
-                </div>
-                <h5 class="mt-2">Mobile Friendly</h5>
-                <p class="text-muted">Perfect experience on any device</p>
+                <div class="step-number">2</div>
+                <h5>View Details</h5>
+                <p class="text-muted">Click on any event to see full details and requirements</p>
             </div>
             <div class="col-md-4 text-center">
-                <div class="feature-icon mx-auto">
-                    <i class="fas fa-headset"></i>
-                </div>
-                <h5 class="mt-2">24/7 Support</h5>
-                <p class="text-muted">Dedicated support team ready to help</p>
+                <div class="step-number">3</div>
+                <h5>Register</h5>
+                <p class="text-muted">Fill out the simple form and confirm your registration</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- JavaScript for Progress Bars and Smooth Scrolling -->
+<!-- Sold Out Events (Collapsible) -->
+{% if sold_out_events %}
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link text-decoration-none" data-bs-toggle="collapse" data-bs-target="#soldOutEvents">
+                                <i class="fas fa-chevron-down me-2"></i>
+                                Sold Out Events ({{ sold_out_events|length }})
+                            </button>
+                        </h5>
+                    </div>
+                    <div class="collapse" id="soldOutEvents">
+                        <div class="card-body">
+                            <div class="row g-3">
+                                {% for event in sold_out_events %}
+                                <div class="col-lg-6">
+                                    <div class="card border-danger">
+                                        <div class="card-body">
+                                            <h6>{{ event.title }}</h6>
+                                            <p class="text-muted small mb-2">{{ event.date|date:"M d, Y" }} • {{ event.location }}</p>
+                                            <span class="badge bg-danger">
+                                                <i class="fas fa-times-circle me-1"></i>Fully Booked
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<style>
+.step-number {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0 auto 1rem;
+}
+
+.event-card {
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.event-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-5px);
+}
+
+.spots-info {
+    flex: 1;
+}
+
+.event-actions {
+    flex-shrink: 0;
+}
+</style>
+
 <script>
+// Calculate and set progress bar widths
 document.addEventListener('DOMContentLoaded', function() {
-    // Calculate and set progress bar widths
     document.querySelectorAll('.progress-bar').forEach(progressBar => {
-        const registered = parseInt(progressBar.getAttribute('aria-valuenow'));
-        const max = parseInt(progressBar.getAttribute('aria-valuemax'));
+        const registered = parseInt(progressBar.getAttribute('data-registered'));
+        const max = parseInt(progressBar.getAttribute('data-max'));
         
         if (max > 0) {
             const percentage = (registered / max) * 100;
             progressBar.style.width = percentage + '%';
         }
-    });
-
-    // Smooth scrolling for navigation links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        });
     });
 });
 </script>

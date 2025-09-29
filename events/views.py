@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, TemplateView
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
 from rest_framework import generics, status
@@ -26,6 +26,16 @@ class HomePageView(ListView):
         context['sold_out_events'] = [event for event in events if event.is_full]
         context['featured_events'] = events[:3]  # First 3 events as featured
         
+        return context
+
+class AboutPageView(TemplateView):
+    template_name = 'events/about.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add any context data needed for the about page
+        context['total_events'] = Event.objects.count()
+        context['total_registrations'] = Registration.objects.count()
         return context
 
 class EventDetailView(DetailView):
@@ -60,6 +70,8 @@ class RegistrationCreateView(CreateView):
         context['event'] = get_object_or_404(Event, pk=self.kwargs['event_id'])
         return context
 
+class APIDocsView(TemplateView):
+    template_name = 'events/api_docs.html'
 # API Views
 class EventListAPIView(generics.ListAPIView):
     queryset = Event.objects.filter(date__gte=timezone.now()).order_by('date')

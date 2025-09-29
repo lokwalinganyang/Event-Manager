@@ -1,18 +1,127 @@
-<!-- Add this after the location section in event_detail.html -->
-<div class="col-md-6">
-    <div class="d-flex align-items-center p-3 border rounded-3">
-        <div class="feature-icon me-3">
-            <i class="fas fa-ticket-alt"></i>
-        </div>
-        <div>
-            <small class="text-muted">REGISTRATION STATUS</small>
-            <div class="fw-semibold">
-                {% if event.is_full %}
-                    <span class="badge bg-danger">Sold Out</span>
-                {% else %}
-                    <span class="badge bg-success">Open for Registration</span>
-                {% endif %}
+{% extends 'base.html' %}
+
+{% block title %}{{ event.title }} - EventFlow{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Back Button -->
+    <div class="mb-4">
+        <a href="{% url 'events:home' %}" class="btn btn-outline-primary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Events
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <!-- Event Card -->
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h1 class="h3 mb-0">{{ event.title }}</h1>
+                </div>
+                <div class="card-body">
+                    <!-- Event Description -->
+                    <div class="mb-4">
+                        <p class="lead">{{ event.description }}</p>
+                    </div>
+
+                    <!-- Event Details -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center p-3 border rounded">
+                                <i class="fas fa-calendar text-primary fa-2x me-3"></i>
+                                <div>
+                                    <small class="text-muted">DATE & TIME</small>
+                                    <div class="fw-semibold">{{ event.date|date:"F d, Y H:i" }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center p-3 border rounded">
+                                <i class="fas fa-map-marker-alt text-primary fa-2x me-3"></i>
+                                <div>
+                                    <small class="text-muted">LOCATION</small>
+                                    <div class="fw-semibold">{{ event.location }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center p-3 border rounded">
+                                <i class="fas fa-users text-primary fa-2x me-3"></i>
+                                <div>
+                                    <small class="text-muted">CAPACITY</small>
+                                    <div class="fw-semibold">{{ event.registered_count }}/{{ event.max_participants }} registered</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center p-3 border rounded">
+                                <i class="fas fa-ticket-alt text-primary fa-2x me-3"></i>
+                                <div>
+                                    <small class="text-muted">STATUS</small>
+                                    <div class="fw-semibold">
+                                        {% if event.is_full %}
+                                            <span class="badge bg-danger">Sold Out</span>
+                                        {% else %}
+                                            <span class="badge bg-success">Available</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    {% if not event.is_full %}
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted">Spots filling up quickly!</span>
+                            <span class="fw-semibold">{{ event.registered_count }}/{{ event.max_participants }}</span>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-success" 
+                                 id="eventProgressBar"
+                                 data-registered="{{ event.registered_count }}" 
+                                 data-max="{{ event.max_participants }}">
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Action Buttons -->
+                    <div class="text-center">
+                        {% if not event.is_full %}
+                            <a href="{% url 'events:register' event.pk %}" class="btn btn-primary btn-lg">
+                                <i class="fas fa-ticket-alt me-2"></i>Register Now
+                            </a>
+                        {% else %}
+                            <div class="alert alert-warning">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                This event is fully booked. Please check back for future events.
+                            </div>
+                            <a href="{% url 'events:home' %}" class="btn btn-outline-primary">
+                                <i class="fas fa-calendar me-2"></i>Browse Other Events
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+// Set progress bar width for event detail page
+document.addEventListener('DOMContentLoaded', function() {
+    const progressBar = document.getElementById('eventProgressBar');
+    if (progressBar) {
+        const registered = parseInt(progressBar.getAttribute('data-registered'));
+        const max = parseInt(progressBar.getAttribute('data-max'));
+        
+        if (max > 0) {
+            const percentage = (registered / max) * 100;
+            progressBar.style.width = percentage + '%';
+        }
+    }
+});
+</script>
+{% endblock %}
